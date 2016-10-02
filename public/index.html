@@ -1,0 +1,83 @@
+<html>
+<link rel="stylesheet" type="text/css" href="style.css">
+<body>
+	<h1>Robot Control Terminal</h1>
+	<img id="camera">
+	<p id="status">TEST</p>
+	<p id="usStatus">Distance: --</p>
+
+<script type="text/javascript">
+var config = {
+	ultrasonics: false
+};
+
+var data = {
+	ultrasonicInterval: null
+};
+
+function robotResponse() {
+	document.getElementById("status").innerHTML = this.responseText;
+}
+
+function ultrasonicResponse() {
+	document.getElementById("usStatus").innerHTML = "Distance: " + this.responseText + " cm";
+}
+
+function updateUltrasonic() {
+	var httpRequest = new XMLHttpRequest();
+	httpRequest.addEventListener("load", ultrasonicResponse);
+	httpRequest.open("GET", "/ultrasonic");
+	httpRequest.send();
+}
+
+function keyEvent(e) {
+	var url;
+	console.log("Key pressed id = " + e.keyIdentifier);
+
+	switch(e.keyIdentifier) {
+		case "Left":
+			url = "/left";
+			break;
+
+		case "Right":
+			url = "/right";
+			break;
+
+		case "Up":
+			url = "/forwards";
+			break;
+
+		case "Down":
+			url = "/backwards";
+			break;
+
+		case "U+0043":
+			document.getElementById("status").innerHTML = "Acquiring image sensor data...";
+			document.getElementById("camera").src = "";
+			document.getElementById("camera").src = "/cheese";
+			break;
+
+		case "U+0055":
+			config.ultrasonics = !config.ultrasonics;
+
+			if (config.ultrasonics) {
+				data.ultrasonicInterval = setInterval(updateUltrasonic, 2000);
+			} else {
+				clearInterval(data.ultrasonicInterval);
+				data.ultrasonicInterval = null;
+			}
+			break;
+	}
+
+	if (url) {
+		var oReq = new XMLHttpRequest();
+		oReq.addEventListener("load", robotResponse);
+		oReq.open("GET", url);
+		oReq.send();
+	}
+}
+
+document.addEventListener("keydown", keyEvent, false);
+</script>
+</body>
+</html>
