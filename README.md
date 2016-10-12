@@ -24,7 +24,7 @@ python webbot.py
 
 Once running you can connect to the robot from any web browser on the same network as the robot. If your Raspberry Pi has the default network settings you can access it at the following URL:
 
-http://raspberrypi.lan/static/
+http://raspberrypi.lan:8080/static/index.html
 
 Once connected you can use the following keys on your keyboard to control the robot:
 
