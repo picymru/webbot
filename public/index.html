@@ -32,32 +32,36 @@ function updateUltrasonic() {
 
 function keyEvent(e) {
 	var url;
-	console.log("Key pressed id = " + e.keyIdentifier);
+	console.log("Key pressed id = " + e.key);
 
-	switch(e.keyIdentifier) {
+	switch(e.key) {
+		case "ArrowLeft":
 		case "Left":
 			url = "/left";
 			break;
 
+		case "ArrowRight":
 		case "Right":
 			url = "/right";
 			break;
 
+		case "ArrowUp":
 		case "Up":
 			url = "/forwards";
 			break;
 
+		case "ArrowDown":
 		case "Down":
 			url = "/backwards";
 			break;
 
-		case "U+0043":
+		case "c":
 			document.getElementById("status").innerHTML = "Acquiring image sensor data...";
 			document.getElementById("camera").src = "";
 			document.getElementById("camera").src = "/cheese";
 			break;
 
-		case "U+0055":
+		case "u":
 			config.ultrasonics = !config.ultrasonics;
 
 			if (config.ultrasonics) {
