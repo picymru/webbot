@@ -20,7 +20,7 @@ The gpiozero module comes pre-installed on recent Raspbian releases but can be i
 sudo apt-get install python3-gpiozero
 
 You can run the project from the command line simply by typing:
-python webbot.py
+python3 webbot.py
 
 Once running you can connect to the robot from any web browser on the same network as the robot. If your Raspberry Pi has the default network settings you can access it at the following URL:
 
