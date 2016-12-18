@@ -65,4 +65,8 @@ if __name__ == '__main__':
     }
     robot.stop()
     cherrypy.config.update({'server.socket_host': '0.0.0.0'})
+    
+    print("Web controlled robot by PiCymru")
+    print("Control me from: " + cherrypy.url() + "/static/index.html")
+    
     cherrypy.quickstart(WebControl(), '/', conf)
