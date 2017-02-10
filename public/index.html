@@ -1,10 +1,25 @@
 <html>
 <link rel="stylesheet" type="text/css" href="style.css">
 <body>
-	<h1>Robot Control Terminal</h1>
-	<img id="camera">
-	<p id="status">TEST</p>
-	<p id="usStatus">Distance: --</p>
+	<div id="headWrapper"><h1>Robot Control Terminal</h1></div>
+
+	<div class="wrapper">
+		<div class="updownBtn"><button class="btn" onmousedown="robotMove(1)">Forward</button></div>
+		<div class="leftrightBtn"><button class="btn" onmousedown="robotMove(4)">Left</button></div>
+		<div class="leftrightBtn"><button class="btn" onmousedown="robotMove(2)">Right</button></div>
+		<div class="updownBtn"><button class="btn" onmousedown="robotMove(3)">Reverse</button></div>
+
+		<p class="statustext" id="status">Press a button to control the robot!</p>
+	</div>
+
+	<div class="wrapper">
+		<button class="btn" id="obsBtn" onclick="robotMove(6)">Activate obstacle avoidance!</button>
+		<p class="statustext" id="usStatus">Distance: --</p>
+	</div>
+
+	<div class="wrapper">
+		<button class="btn" id="cambtn" onclick="robotMove(5)">Take Photo!</button><img id="camera">
+    </div>
 
 <script type="text/javascript">
 var config = {
@@ -28,6 +43,58 @@ function updateUltrasonic() {
 	httpRequest.addEventListener("load", ultrasonicResponse);
 	httpRequest.open("GET", "/ultrasonic");
 	httpRequest.send();
+}
+
+function robotMove(direction) {
+	var url;
+	console.log("Direction id = " + direction);
+
+	switch(direction) {
+		case 1:
+		case "Up":
+			url = "/forwards";
+			break;
+
+		case 2:
+		case "Right":
+			url = "/right";
+			break;
+
+		case 3:
+		case "Down":
+			url = "/backwards";
+			break;
+
+		case 4:
+		case "Left":
+			url = "/left";
+			break;
+
+		case 5:
+			document.getElementById("status").innerHTML = "Acquiring image sensor data...";
+			document.getElementById("camera").src = "";
+			document.getElementById("camera").src = "/cheese";
+			break;
+
+		case 6:
+			config.ultrasonics = !config.ultrasonics;
+
+			if (config.ultrasonics) {
+				data.ultrasonicInterval = setInterval(updateUltrasonic, 2000);
+			} else {
+				clearInterval(data.ultrasonicInterval);
+				data.ultrasonicInterval = null;
+			}
+			break;
+	}
+
+	if (url) {
+		var oReq = new XMLHttpRequest();
+		oReq.addEventListener("load", robotResponse);
+		oReq.open("GET", url);
+		oReq.send();
+	}
+
 }
 
 function keyEvent(e) {
