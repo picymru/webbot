@@ -20,77 +20,86 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import subprocess
-import time
-import os
-import socket
-
-import cherrypy
+import os, logging, subprocess, time
+from bottle import route, request, response, redirect, hook, error, default_app, view, static_file, template, HTTPError
 from gpiozero import Robot, DistanceSensor
 
-robot = Robot(left=(10, 9), right=(8, 7))
-sensor = DistanceSensor(18, 17)
+@route('/left')
+def action_left():
+	robot.left()
+	time.sleep(0.2)
+	robot.stop()
+	return "LEFT TURN"
 
-class WebControl(object):
-    @cherrypy.expose
-    def left(self):
-        robot.left()
-        time.sleep(0.2)
-        robot.stop()
-        return "LEFT TURN"
+@route('/right')
+def action_right():
+	robot.right()
+	time.sleep(0.2)
+	robot.stop()
+	return "RIGHT TURN"
 
-    @cherrypy.expose
-    def right(self):
-        robot.right()
-        time.sleep(0.2)
-        robot.stop()
-        return "RIGHT TURN"
+@route('/forward')
+def action_forward():
+	robot.forward()
+	time.sleep(0.2)
+	robot.stop()
+	return "FORWARDS"
 
-    @cherrypy.expose
-    def forwards(self):
-        robot.forward()
-        time.sleep(0.2)
-        robot.stop()
-        return "FORWARDS"
- 
-    @cherrypy.expose
-    def backwards(self):
-        robot.backward()
-        time.sleep(0.2)
-        robot.stop()
-        return "BACKWARDS"
+@route('/back')
+def action_back():
+	robot.backward()
+	time.sleep(0.2)
+	robot.stop()
+	return "BACKWARDS"
 
-    @cherrypy.expose
-    def ultrasonic(self):
-        return "{:.2f}".format(sensor.distance)
+@route('/ultrasonic')
+def ultrasonic():
+	return "{:.2f}".format(sensor.distance)
 
-    @cherrypy.expose
-    def cheese(self):
-        cherrypy.response.headers['Content-Type'] = 'image/jpeg'
-        cherrypy.response.headers['Cache-Control'] = 'no-store'
-        with subprocess.Popen(["raspistill", "-vf", "-w", "400", "-h", "300", "-o", "-"], stdout=subprocess.PIPE) as proc:
-            return proc.stdout.read()
-        return run_output.stdout
+@route('/cheese')
+def cheese():
+	response.content_type = 'image/jpeg'
+	response.cache_control = 'no-store'
+	with subprocess.Popen(["raspistill", "-vf", "-w", "400", "-h", "300", "-o", "-"], stdout=subprocess.PIPE) as proc:
+		return proc.stdout.read()
+	return run_output.stdout
+
+@route('/')
+def index():
+	return static_file('index.html', root='public')
+
+@route('/style.css')
+def index():
+	return static_file('style.css', root='public')
 
 if __name__ == '__main__':
-    conf = {
-        '/': {
-            'tools.sessions.on': True,
-            'tools.staticdir.root': os.path.abspath(os.getcwd())
-        },
-        '/static': {
-            'tools.staticdir.on': True,
-            'tools.staticdir.dir': './public'
-        }
-    }
-    robot.stop()
-    cherrypy.config.update({'server.socket_host': os.getenv('IP', '0.0.0.0')})
-    
-    # We'll make life easy, and detect the LAN IP to show you where to visit!
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(('8.8.8.8', 1))
+	app = default_app()
 
-    print("Web controlled robot by PiCymru")
-    print("Want to control me? In your browser, visit http://{}:8080/static/index.html".format(s.getsockname()[0]))
-    
-    cherrypy.quickstart(WebControl(), '/', conf)
+	serverHost = os.getenv('IP', 'localhost')
+	serverPort = os.getenv('PORT', '5000')
+
+	# Now we're ready, so start the server
+	# Instantiate the logger
+	log = logging.getLogger('log')
+	console = logging.StreamHandler()
+	log.setLevel(logging.INFO)
+	log.addHandler(console)
+
+	try:
+		with open('/dev/gpiomem') as f:
+			f.read()
+	except:
+		exit(log.fatal('Running this application is only supported on a Raspberry Pi.'))
+
+	# If the above test failed, they're not running on a Raspberry Pi
+	robot = Robot(left=(10, 9), right=(8, 7))
+	sensor = DistanceSensor(18, 17)
+	robot.stop()
+
+	# Now we're ready, so start the server
+	try:
+		# We'll make life easy, and detect the LAN IP to show you where to visit!
+		print("Want to control me? In your browser, visit http://{}:5000/index.html".format(serverHost))
+		app.run(host=serverHost, port=serverPort, server='tornado')
+	except:
+		log.error("Failed to start application server")
