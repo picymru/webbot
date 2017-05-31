@@ -85,12 +85,6 @@ if __name__ == '__main__':
 	log.setLevel(logging.INFO)
 	log.addHandler(console)
 
-	try:
-		with open('/dev/gpiomem') as f:
-			f.read()
-	except:
-		exit(log.fatal('Running this application is only supported on a Raspberry Pi.'))
-
 	# If the above test failed, they're not running on a Raspberry Pi
 	robot = Robot(left=(10, 9), right=(8, 7))
 	sensor = DistanceSensor(18, 17)
