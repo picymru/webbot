@@ -20,9 +20,13 @@ Running the project is easy. From your Raspberry Pi command line, run the follow
 
 	python3 webbot.py
 
-Once running, the software will display a web address for you to connect to from any web browser connected to the same network as your robot! If your Raspberry Pi has the default network settings you can access it at the following URL:
+Once running, the software will display a web address for you to connect to. By default, and for security purposes, the software will only initially allow connections from the web browser running on the Raspberry Pi by visiting http://localhost:5000
 
-http://raspberrypi.lan:8080/static/index.html
+If you know what you're doing, and would like to expose the interface to all devices running on your network, then run the software using the following:
+
+	IP=0.0.0.0 python3 webbot.py
+
+This will allow you to control the robot from any device on the same network as your Raspberry Pi at http://raspberrypi.lan:5000
 
 ### Control
 Once connected in your browser, by default, you can use the following keys on your keyboard to control the robot:
