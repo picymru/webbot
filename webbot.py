@@ -39,12 +39,14 @@ def action_right():
 	return "RIGHT TURN"
 
 @route('/forward')
+@route('/forwards')
 def action_forward():
 	robot.forward()
 	time.sleep(0.2)
 	robot.stop()
 	return "FORWARDS"
 
+@route('/back')
 @route('/backward')
 def action_back():
 	robot.backward()
