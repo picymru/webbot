@@ -22,7 +22,7 @@
 
 import os, logging, subprocess, time, argparse
 from bottle import route, request, response, redirect, hook, error, default_app, view, static_file, template, HTTPError
-from gpiozero import CamJamKitRobot, DistanceSensor
+from gpiozero import CamJamKitRobot, DistanceSensor, LineSensor
 
 @route('/left')
 def action_left():
@@ -78,9 +78,13 @@ if __name__ == '__main__':
 
 	parser = argparse.ArgumentParser()
 
-	# Save to file
+	# Server settings
 	parser.add_argument("-i", "--host", default=os.getenv('IP', '127.0.0.1'), help="IP Address")
 	parser.add_argument("-p", "--port", default=os.getenv('PORT', 5000), help="Port")
+
+	# Additional hardware
+	parser.add_argument("--distance-sensor", help="enable distance sensor", default=False, action="store_true")
+	parser.add_argument("--line-sensor", help="enable line sensor", default=False, action="store_true")
 
 	# Verbose mode
 	parser.add_argument("--verbose", "-v", help="increase output verbosity", action="store_true")
@@ -94,7 +98,10 @@ if __name__ == '__main__':
 
 	try:
 		robot = CamJamKitRobot()
-		sensor = DistanceSensor(18, 17)
+		if args.distance_sensor:
+			distance_sensor = DistanceSensor(18, 17)
+		if args.line_sensor:
+			line_sensor = LineSensor(4)
 		robot.stop()
 	except Exception as e:
 		log.error(e)
