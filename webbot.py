@@ -22,7 +22,7 @@
 
 import os, logging, subprocess, time, argparse
 from bottle import route, request, response, redirect, hook, error, default_app, view, static_file, template, HTTPError
-from gpiozero import CamJamKitRobot, DistanceSensor
+from gpiozero import Robot, CamJamKitRobot, DistanceSensor
 
 @route('/left')
 def action_left():
@@ -91,7 +91,7 @@ if __name__ == '__main__':
 	log = logging.getLogger(__name__)
 
 	try:
-		robot = CamJamKitRobot()
+		robot = CamJamKitRobot(Robot(left=(14, 15), right=(17, 18)))
 		sensor = DistanceSensor(18, 17)
 		robot.stop()
 	except Exception as e:
