@@ -73,27 +73,33 @@ def index():
 	return static_file('style.css', root='public')
 
 if __name__ == '__main__':
-	app = default_app()
 
-	serverHost = os.getenv('IP', 'localhost')
-	serverPort = os.getenv('PORT', '5000')
+	parser = argparse.ArgumentParser()
 
-	# Now we're ready, so start the server
-	# Instantiate the logger
-	log = logging.getLogger('log')
-	console = logging.StreamHandler()
-	log.setLevel(logging.INFO)
-	log.addHandler(console)
+	# Save to file
+	parser.add_argument("-i", "--host", default=os.getenv('IP', '127.0.0.1'), help="IP Address")
+	parser.add_argument("-p", "--port", default=os.getenv('PORT', 5000), help="Port")
 
-	# If the above test failed, they're not running on a Raspberry Pi
-	robot = Robot(left=(10, 9), right=(8, 7))
-	sensor = DistanceSensor(18, 17)
-	robot.stop()
+	# Verbose mode
+	parser.add_argument("--verbose", "-v", help="increase output verbosity", action="store_true")
+	args = parser.parse_args()
 
-	# Now we're ready, so start the server
+	if args.verbose:
+		logging.basicConfig(level=logging.DEBUG)
+	else:
+		logging.basicConfig(level=logging.INFO)
+	log = logging.getLogger(__name__)
+
 	try:
-		# We'll make life easy, and detect the LAN IP to show you where to visit!
-		print("Want to control me? In your browser, visit http://{}:5000/index.html".format(serverHost))
-		app.run(host=serverHost, port=serverPort, server='tornado')
+		robot = Robot(left=(10, 9), right=(8, 7))
+		sensor = DistanceSensor(18, 17)
+		robot.stop()
+	except Exception as e:
+		log.error(e)
+		exit()
+
+	try:
+		app = default_app()
+		app.run(host=args.host, port=args.port, server='tornado')
 	except:
-		log.error("Failed to start application server")
+		log.error("Unable to start server on {}:{}".format(args.host, args.port))
