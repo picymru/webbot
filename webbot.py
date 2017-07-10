@@ -26,28 +26,28 @@ from gpiozero import Robot, CamJamKitRobot, DistanceSensor
 
 @route('/left')
 def action_left():
-	robot.left(speed=1)
+	robot.left()
 	time.sleep(0.2)
 	robot.stop()
 	return "LEFT TURN"
 
 @route('/right')
 def action_right():
-	robot.right(speed=1)
+	robot.right()
 	time.sleep(0.2)
 	robot.stop()
 	return "RIGHT TURN"
 
 @route('/forward')
 def action_forward():
-	robot.forward(speed=1)
+	robot.forward()
 	time.sleep(0.2)
 	robot.stop()
 	return "FORWARDS"
 
 @route('/back')
 def action_back():
-	robot.backward(speed=1)
+	robot.backward()
 	time.sleep(0.2)
 	robot.stop()
 	return "BACKWARDS"
@@ -91,7 +91,7 @@ if __name__ == '__main__':
 	log = logging.getLogger(__name__)
 
 	try:
-		robot = CamJamKitRobot(Robot(left=(14, 15), right=(17, 18)))
+		robot = CamJamKitRobot()
 		sensor = DistanceSensor(18, 17)
 		robot.stop()
 	except Exception as e:
