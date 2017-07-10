@@ -45,7 +45,7 @@ def action_forward():
 	robot.stop()
 	return "FORWARDS"
 
-@route('/back')
+@route('/backward')
 def action_back():
 	robot.backward()
 	time.sleep(0.2)
