@@ -22,7 +22,7 @@
 
 import os, logging, subprocess, time, argparse
 from bottle import route, request, response, redirect, hook, error, default_app, view, static_file, template, HTTPError
-from gpiozero import Robot, CamJamKitRobot, DistanceSensor
+from gpiozero import CamJamKitRobot, DistanceSensor
 
 @route('/left')
 def action_left():
