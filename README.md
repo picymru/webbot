@@ -24,7 +24,7 @@ Once running, the software will display a web address for you to connect to. By 
 
 If you know what you're doing, and would like to expose the interface to all devices running on your network, then run the software using the following:
 
-	IP=0.0.0.0 python3 webbot.py
+	python3 webbot.py -i 0.0.0.0
 
 This will allow you to control the robot from any device on the same network as your Raspberry Pi at http://raspberrypi.lan:5000
 
