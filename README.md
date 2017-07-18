@@ -63,7 +63,7 @@ This project has been developed by PiCymru as part of our education and learning
 
 ## Support
 
-Have a question? Need assistance? Don't stay stuck! If you do use this project or have any feedback we would love to hear from you, tweet us at [@PiCymru](https://twitter.com/PiCymru) or drop us an [e-mail](mailto:hello@picymru.org.uk)
+Have a question? Need assistance? Don't stay stuck! If you do use this project or have any feedback we would love to hear from you, you can add an issue to our [issue tracker](https://codedin.wales/picymru/webbot), tweet us at [@PiCymru](https://twitter.com/PiCymru) or drop us an [e-mail](mailto:hello@picymru.org.uk)
 
 ## Thanks
 A big thanks to Tim Richardson & Mike Horne for the fantastic CamJam 3 and Ben Nuttall and the gpiozero team for such a simple library.
