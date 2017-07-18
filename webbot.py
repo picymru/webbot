@@ -62,7 +62,7 @@ def ultrasonic():
 def cheese():
 	response.content_type = 'image/jpeg'
 	response.cache_control = 'no-store'
-	with subprocess.Popen(["raspistill", "-vf", "-w", "400", "-h", "300", "-o", "-"], stdout=subprocess.PIPE) as proc:
+	with subprocess.Popen(["raspistill", "-w", "400", "-h", "300", "-o", "-"], stdout=subprocess.PIPE) as proc:
 		return proc.stdout.read()
 	return run_output.stdout
 
