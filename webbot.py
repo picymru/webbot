@@ -56,7 +56,7 @@ def action_back():
 
 @route('/ultrasonic')
 def ultrasonic():
-	return "{:.2f}".format(sensor.distance)
+	return "{:.2f}".format(distance_sensor.distance)
 
 @route('/cheese')
 def cheese():
