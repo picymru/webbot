@@ -11,8 +11,7 @@ This is a very simple Python based robot project for the Raspberry Pi designed f
 ## Installation
 We've made installing everything you need to get started with our browser controlled robot easy!
 
-	git clone https://codedin.wales/picymru/webbot.git
-	cd webbot
+	git clone https://github.com/picymru/webbot.git
 	make install
 
 ## Usage
